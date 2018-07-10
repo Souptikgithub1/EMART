@@ -32,6 +32,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String index(){
+        return "hello spring boot";
+    }
+
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     public List<Category> getCategories(){
         return this.categoryService.getAll();
