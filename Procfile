@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -war target/emart-0.0.1-SNAPSHOT.war --server.port=$PORT
+web:    java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT target/*.war
