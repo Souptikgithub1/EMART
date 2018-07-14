@@ -23,6 +23,13 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "auth_token")
+    private String authToken;
+
+    @Column(name = "provider")
+    private String provider;
+
+
     public User() {
         super();
     }
@@ -65,5 +72,21 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
     }
 }
