@@ -63,10 +63,12 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
             " FROM em_product AS ep " +
             " LEFT JOIN em_category AS ec ON ep.category_id = ec.id " +
             " LEFT JOIN em_brand AS eb ON ep.brand_id = eb.id " +
-            " INNER JOIN em_product_feature_names AS epfn ON epfn.prod_vert_id = ep.vertical_id " +
-            " INNER JOIN em_product_feature_values AS epfv ON epfv.prod_feature_id = epfn.id AND epfv.product_id = ep.id " +
+
+            " LEFT JOIN em_product_feature_names AS epfn ON epfn.prod_vert_id = ep.vertical_id AND epfn.is_key_feature = '1' " +
+            " LEFT JOIN em_product_feature_values AS epfv ON epfv.prod_feature_id = epfn.id AND epfv.product_id = ep.id " +
+
             " LEFT JOIN em_product_feature_category AS epfc ON epfn.feature_category_id = epfc.id " +
-            " WHERE ep.category_id = :categoryId AND epfn.is_key_feature = '1' GROUP BY ep.id ",
+            " WHERE ep.category_id = :categoryId GROUP BY ep.id ",
             nativeQuery = true)
     Stream<ProductDetails> getProducts(@Param("categoryId") long categoryId);
 

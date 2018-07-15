@@ -1,5 +1,6 @@
 package com.em.entity;
 
+import com.em.bean.ProductDetailsBean;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class SearchResult {
     private int startCount;
     private int endCount;
     private long totalProductCount;
-    private List<Product> products;
+    private List<ProductDetailsBean> productDetailsBeans;
 
     public SearchResult() {
         super();
@@ -51,11 +52,11 @@ public class SearchResult {
         this.totalProductCount = totalProductCount;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<ProductDetailsBean> getProductDetailsBeans() {
+        return productDetailsBeans;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setProductDetailsBeans(List<ProductDetailsBean> productDetailsBeans) {
+        this.productDetailsBeans = productDetailsBeans;
     }
 }
