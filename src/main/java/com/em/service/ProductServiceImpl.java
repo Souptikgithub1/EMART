@@ -62,10 +62,15 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public long getProductsCount(String categoryId,
-                                 String verticalId) {
+                                 String verticalId,
+                                 int minPrice,
+                                 int maxPrice) {
         return this.productDetailsRepository.
                 getProductCount(categoryId,
-                                verticalId);
+                                verticalId,
+
+                                minPrice,
+                                maxPrice);
     }
 
     @Override

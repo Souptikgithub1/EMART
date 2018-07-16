@@ -24,7 +24,10 @@ public interface ProductService {
     Product update(Product product);
     /*Stream<ProductDetails> getProducts(Map<String, String> param);*/
     long getProductsCount(String categoryId,
-                          String verticalId);
+                          String verticalId,
+
+                          int minPrice,
+                          int maxPrice);
     void delete(long id);
     void updateProductState(long productId);
 }

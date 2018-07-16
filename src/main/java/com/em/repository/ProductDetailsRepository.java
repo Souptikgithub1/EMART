@@ -70,10 +70,15 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
             " LEFT JOIN em_product_feature_category AS epfc ON epfn.feature_category_id = epfc.id " +
             " WHERE ep.category_id LIKE %:categoryId% " +
             "   AND ep.vertical_id LIKE %:verticalId% " +
-            " GROUP BY ep.id LIMIT :limit OFFSET :startCount",
+            "   AND ep.selling_rate BETWEEN :minPrice AND :maxPrice " +
+            " GROUP BY ep.id LIMIT :limit OFFSET :startCount ",
             nativeQuery = true)
     Stream<ProductDetails> getProducts(@Param("categoryId") String categoryId,
                                        @Param("verticalId") String verticalId,
+
+                                       @Param("minPrice") int minPrice,
+                                       @Param("maxPrice") int maxPrice,
+
                                        @Param("startCount") long startCount,
                                        @Param("limit") int limit);
 
@@ -81,8 +86,12 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
     @Query(value =  " SELECT count(*) " +
             " FROM em_product AS ep " +
             " WHERE ep.category_id LIKE %:categoryId% " +
-            "   AND ep.vertical_id LIKE %:verticalId% ",
+            "   AND ep.vertical_id LIKE %:verticalId% " +
+            "   AND ep.selling_rate BETWEEN :minPrice AND :maxPrice ",
             nativeQuery = true)
     long getProductCount(@Param("categoryId") String categoryId,
-                         @Param("verticalId") String verticalId);
+                         @Param("verticalId") String verticalId,
+
+                         @Param("minPrice") int minPrice,
+                         @Param("maxPrice") int maxPrice);
 }

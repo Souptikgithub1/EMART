@@ -88,24 +88,38 @@ public class ProductController {
 
         String categoryId = param.get("categoryId") != null ? param.get("categoryId") : "";
         String verticalId = param.get("verticalId") != null ? param.get("verticalId") : "" ;
+
+        int minPrice = param.get("minPrice") != null ? Integer.parseInt(param.get("minPrice")) : 0;
+        int maxPrice = param.get("maxPrice") != null ? Integer.parseInt(param.get("maxPrice")) : 100000000;
+
         int page = (param.get("page") != null) ? Integer.parseInt(param.get("page")) : 0;
         int size = (param.get("size") != null) ? Integer.parseInt(param.get("size")) : 10;
 
 
         SearchResult searchResult = new SearchResult();
         try{
+            //get product counts
             long totalProductCount =
                     this.productService.
                             getProductsCount(categoryId,
-                                            verticalId);
+                                            verticalId,
+
+                                            minPrice,
+                                            maxPrice);
             /*PrintWriter printWriter = response.getWriter();*/
             response.addHeader("Content-Type", "application/json");
             //response.addHeader("Content-Disposition", "attachment; filename=todos.csv");
             response.addHeader("counting", Long.toString(totalProductCount));
+
+            //get products
             Stream<ProductDetails> productDetailsStream =
                     this.productDetailsRepository.
                         getProducts(categoryId,
                                     verticalId,
+
+                                    minPrice,
+                                    maxPrice,
+
                                     page * size,
                                     size);
 
