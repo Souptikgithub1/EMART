@@ -10,6 +10,7 @@ import java.util.List;
 public interface CategoryService {
 
     Category add(Category category);
+    Category get(long id);
     List<Category> getAll();
     List<Category> getVerticals();
     List<Category> getLeafs();

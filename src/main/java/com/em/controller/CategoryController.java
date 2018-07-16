@@ -42,4 +42,9 @@ public class CategoryController {
         return new ResponseEntity<>(this.categoryService.getLeafsByParentId(Long.parseLong(parentId)), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getById(@PathVariable("id") String id){
+        return new ResponseEntity<>(this.categoryService.get(Long.parseLong(id)), HttpStatus.OK);
+    }
+
 }

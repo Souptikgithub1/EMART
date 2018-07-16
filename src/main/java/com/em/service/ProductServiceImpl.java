@@ -48,7 +48,7 @@ public class ProductServiceImpl implements ProductService{
         return products;
     }
 
-    @Override
+    /*@Override
     @Transactional(readOnly = true)
     public Stream<ProductDetails> getProducts(Map<String, String> param) {
 
@@ -58,11 +58,14 @@ public class ProductServiceImpl implements ProductService{
 
 
         return this.productDetailsRepository.getProducts(Long.parseLong(categoryId));
-    }
+    }*/
 
     @Override
-    public long getProductsCount(long categoryId) {
-        return this.productDetailsRepository.getProductCount(categoryId);
+    public long getProductsCount(String categoryId,
+                                 String verticalId) {
+        return this.productDetailsRepository.
+                getProductCount(categoryId,
+                                verticalId);
     }
 
     @Override

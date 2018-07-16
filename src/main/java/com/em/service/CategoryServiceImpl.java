@@ -33,6 +33,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Category get(long id) {
+        return this.categoryRepository.findById(id);
+    }
+
+    @Override
     public List<Category> getVerticals() {
         return this.categoryRepository.getVerticals();
     }

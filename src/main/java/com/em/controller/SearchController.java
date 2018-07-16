@@ -34,7 +34,7 @@ public class SearchController {
     @Autowired
     private ProductDetailsRepository productDetailsRepository;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public void searchTest(@RequestParam Map<String,String> param,
                                         HttpServletRequest request,
@@ -63,12 +63,12 @@ public class SearchController {
 
                 }
             });
-            /*os.flush();
-            os.close();*/
+            *//*os.flush();
+            os.close();*//*
             printWriter.close();
         }catch (Exception e){
             System.out.println(e);
         }
 
-    }
+    }*/
 }

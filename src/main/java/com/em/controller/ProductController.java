@@ -55,8 +55,8 @@ public class ProductController {
         return this.bannerService.getBanners();
     }
 
-    @RequestMapping(value = "/searchTest", method = RequestMethod.GET)
-    public ResponseEntity<?> search(@RequestParam Map<String,String> param){
+    /*@RequestMapping(value = "/searchTest", method = RequestMethod.GET)
+    public ResponseEntity<?> searchTest(@RequestParam Map<String,String> param){
 
         //fetching all query param data
         String categoryId = (param.get("categoryId") != "0") ? param.get("categoryId") : null;
@@ -78,27 +78,36 @@ public class ProductController {
         //searchResult.setProducts(productPage.getContent());
 
         return new ResponseEntity<>(searchResult, HttpStatus.OK);
-    }
+    }*/
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public ResponseEntity<?> searchTest(@RequestParam Map<String,String> param,
+    public ResponseEntity<?> search(@RequestParam Map<String,String> param,
                            HttpServletRequest request,
                            HttpServletResponse response){
 
-        long categoryId = Long.parseLong((param.get("categoryId") != "0") ? param.get("categoryId") : null);
+        String categoryId = param.get("categoryId") != null ? param.get("categoryId") : "";
+        String verticalId = param.get("verticalId") != null ? param.get("verticalId") : "" ;
         int page = (param.get("page") != null) ? Integer.parseInt(param.get("page")) : 0;
         int size = (param.get("size") != null) ? Integer.parseInt(param.get("size")) : 10;
 
 
         SearchResult searchResult = new SearchResult();
         try{
-            long totalProductCount = this.productService.getProductsCount(categoryId);
+            long totalProductCount =
+                    this.productService.
+                            getProductsCount(categoryId,
+                                            verticalId);
             /*PrintWriter printWriter = response.getWriter();*/
             response.addHeader("Content-Type", "application/json");
             //response.addHeader("Content-Disposition", "attachment; filename=todos.csv");
             response.addHeader("counting", Long.toString(totalProductCount));
-            Stream<ProductDetails> productDetailsStream = this.productDetailsRepository.getProducts(categoryId);
+            Stream<ProductDetails> productDetailsStream =
+                    this.productDetailsRepository.
+                        getProducts(categoryId,
+                                    verticalId,
+                                    page * size,
+                                    size);
 
             //System.out.println(productDetailsStream);
             List<ProductDetailsBean> productDetailsBeans = new ArrayList<>();
