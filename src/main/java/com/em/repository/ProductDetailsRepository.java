@@ -3,6 +3,7 @@ package com.em.repository;
 import com.em.entity.ProductDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -68,29 +69,23 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
             " LEFT JOIN em_product_feature_values AS epfv ON epfv.prod_feature_id = epfn.id AND epfv.product_id = ep.id " +
 
             " LEFT JOIN em_product_feature_category AS epfc ON epfn.feature_category_id = epfc.id " +
-            " WHERE ep.category_id LIKE %:categoryId% " +
-            "   AND ep.vertical_id LIKE %:verticalId% " +
-            "   AND ep.selling_rate BETWEEN :minPrice AND :maxPrice " +
-            " GROUP BY ep.id LIMIT :limit OFFSET :startCount ",
+            " WHERE ep.id IN :productIds " +
+            "       AND ep.selling_rate BETWEEN :minPrice AND :maxPrice " +
+            " GROUP BY ep.id ORDER BY ep.selling_rate ASC  LIMIT :limit OFFSET :startCount ",
             nativeQuery = true)
-    Stream<ProductDetails> getProducts(@Param("categoryId") String categoryId,
-                                       @Param("verticalId") String verticalId,
-
+    Stream<ProductDetails> getProducts(@Param("productIds") List<Long> productIds,
                                        @Param("minPrice") int minPrice,
                                        @Param("maxPrice") int maxPrice,
-
                                        @Param("startCount") long startCount,
                                        @Param("limit") int limit);
 
 
     @Query(value =  " SELECT count(*) " +
             " FROM em_product AS ep " +
-            " WHERE ep.category_id LIKE %:categoryId% " +
-            "   AND ep.vertical_id LIKE %:verticalId% " +
+            " WHERE ep.id IN :productIds " +
             "   AND ep.selling_rate BETWEEN :minPrice AND :maxPrice ",
             nativeQuery = true)
-    long getProductCount(@Param("categoryId") String categoryId,
-                         @Param("verticalId") String verticalId,
+    long getProductCount(@Param("productIds") List<Long> productIds,
 
                          @Param("minPrice") int minPrice,
                          @Param("maxPrice") int maxPrice);

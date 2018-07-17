@@ -34,4 +34,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query(value =  " UPDATE em_product SET state = CASE WHEN state = '1' THEN '0' ELSE '1' END WHERE id = :productId", nativeQuery = true)
     void updateProductState(@Param("productId") long productId);
+
+    List<Product> findByCategory_Id(long categoryId);
+    List<Product> findByVerticalId(long verticalId);
+    List<Product> findByVerticalIdAndBrand_Id(long verticalId, long brandId);
+    List<Product> findByCategory_IdAndBrand_Id(long categoryId, long brandId);
 }

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,8 +87,10 @@ public class ProductController {
                            HttpServletRequest request,
                            HttpServletResponse response){
 
-        String categoryId = param.get("categoryId") != null ? param.get("categoryId") : "";
-        String verticalId = param.get("verticalId") != null ? param.get("verticalId") : "" ;
+        String categoryId = param.get("categoryId") != null && param.get("categoryId").trim() != "" ? param.get("categoryId") : "0";
+        String verticalId = param.get("verticalId") != null && param.get("verticalId").trim() != "" ? param.get("verticalId") : "0" ;
+
+
 
         int minPrice = param.get("minPrice") != null ? Integer.parseInt(param.get("minPrice")) : 0;
         int maxPrice = param.get("maxPrice") != null ? Integer.parseInt(param.get("maxPrice")) : 100000000;
@@ -96,16 +99,23 @@ public class ProductController {
         int size = (param.get("size") != null) ? Integer.parseInt(param.get("size")) : 10;
 
 
+        List<Long> productIds = new LinkedList<>();
+        if(categoryId != "0"){
+            this.productService.findByCategory_Id(Long.parseLong(categoryId)).
+                    forEach(product ->  productIds.add(product.getId()) );
+        }
+
+        if(verticalId != "0"){
+            this.productService.findByVerticalId(Long.parseLong(verticalId)).
+                    forEach(product -> productIds.add(product.getId()));
+        }
+
         SearchResult searchResult = new SearchResult();
         try{
             //get product counts
             long totalProductCount =
                     this.productService.
-                            getProductsCount(categoryId,
-                                            verticalId,
-
-                                            minPrice,
-                                            maxPrice);
+                            getProductsCount(productIds, minPrice, maxPrice);
             /*PrintWriter printWriter = response.getWriter();*/
             response.addHeader("Content-Type", "application/json");
             //response.addHeader("Content-Disposition", "attachment; filename=todos.csv");
@@ -114,14 +124,7 @@ public class ProductController {
             //get products
             Stream<ProductDetails> productDetailsStream =
                     this.productDetailsRepository.
-                        getProducts(categoryId,
-                                    verticalId,
-
-                                    minPrice,
-                                    maxPrice,
-
-                                    page * size,
-                                    size);
+                        getProducts(productIds, minPrice, maxPrice, page * size, size);
 
             //System.out.println(productDetailsStream);
             List<ProductDetailsBean> productDetailsBeans = new ArrayList<>();
@@ -206,4 +209,6 @@ public class ProductController {
         }
 
     }
+
+
 }

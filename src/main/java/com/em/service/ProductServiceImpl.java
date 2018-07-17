@@ -61,16 +61,8 @@ public class ProductServiceImpl implements ProductService{
     }*/
 
     @Override
-    public long getProductsCount(String categoryId,
-                                 String verticalId,
-                                 int minPrice,
-                                 int maxPrice) {
-        return this.productDetailsRepository.
-                getProductCount(categoryId,
-                                verticalId,
-
-                                minPrice,
-                                maxPrice);
+    public long getProductsCount(List<Long> productIds, int minPrice, int maxPrice) {
+        return this.productDetailsRepository.getProductCount(productIds, minPrice, maxPrice);
     }
 
     @Override
@@ -114,5 +106,25 @@ public class ProductServiceImpl implements ProductService{
     @Transactional
     public void updateProductState(long productId) {
         this.productRepository.updateProductState(productId);
+    }
+
+    @Override
+    public List<Product> findByCategory_Id(long categoryId) {
+        return this.productRepository.findByCategory_Id(categoryId);
+    }
+
+    @Override
+    public List<Product> findByVerticalId(long verticalId) {
+        return this.productRepository.findByVerticalId(verticalId);
+    }
+
+    @Override
+    public List<Product> findByVerticalIdAndBrand_Id(long verticalId, long brandId) {
+        return this.findByVerticalIdAndBrand_Id(verticalId, brandId);
+    }
+
+    @Override
+    public List<Product> findByCategory_idAndBrand_Id(long categoryId, long brandId) {
+        return this.findByCategory_idAndBrand_Id(categoryId, brandId);
     }
 }
