@@ -1,9 +1,14 @@
 package com.em.service;
 
 import com.em.bean.ProductDetailsBean;
+import com.em.bean.QueryLimit;
+import com.em.bean.QueryOrder;
+import com.em.bean.QuerySearchKeys;
 import com.em.beanFactory.ProductDetailsBeanFactory;
+import com.em.dao.ProductDetailsDao;
 import com.em.entity.Product;
 import com.em.entity.ProductDetails;
+import com.em.entity.SearchResult;
 import com.em.repository.ProductDetailsRepository;
 import com.em.repository.ProductFeatureValueRepository;
 import com.em.repository.ProductRepository;
@@ -35,6 +40,9 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     private ProductFeatureValueService productFeatureValueService;
 
+    @Autowired
+    private ProductDetailsDao productDetailsDao;
+
     @Override
     @Transactional
     public Page<Product> getProductsPage(String categoryId, Pageable pageable) {
@@ -60,10 +68,6 @@ public class ProductServiceImpl implements ProductService{
         return this.productDetailsRepository.getProducts(Long.parseLong(categoryId));
     }*/
 
-    @Override
-    public long getProductsCount(List<Long> productIds, int minPrice, int maxPrice) {
-        return this.productDetailsRepository.getProductCount(productIds, minPrice, maxPrice);
-    }
 
     @Override
     public ProductDetailsBean getSingleProduct(long productId) {
@@ -108,23 +112,26 @@ public class ProductServiceImpl implements ProductService{
         this.productRepository.updateProductState(productId);
     }
 
-    @Override
-    public List<Product> findByCategory_Id(long categoryId) {
-        return this.productRepository.findByCategory_Id(categoryId);
-    }
 
     @Override
-    public List<Product> findByVerticalId(long verticalId) {
-        return this.productRepository.findByVerticalId(verticalId);
-    }
+    public SearchResult getSearchResult(Map<String, String> param) {
 
-    @Override
-    public List<Product> findByVerticalIdAndBrand_Id(long verticalId, long brandId) {
-        return this.findByVerticalIdAndBrand_Id(verticalId, brandId);
-    }
+        long categoryId = param.get("categoryId") != null && param.get("categoryId").trim() != "" ? Long.parseLong(param.get("categoryId")) : 0;
+        long verticalId = param.get("verticalId") != null && param.get("verticalId").trim() != "" ? Long.parseLong(param.get("verticalId")) : 0 ;
 
-    @Override
-    public List<Product> findByCategory_idAndBrand_Id(long categoryId, long brandId) {
-        return this.findByCategory_idAndBrand_Id(categoryId, brandId);
+
+
+        int minPrice = param.get("minPrice") != null ? Integer.parseInt(param.get("minPrice")) : 0;
+        int maxPrice = param.get("maxPrice") != null ? Integer.parseInt(param.get("maxPrice")) : 100000000;
+
+        int page = (param.get("page") != null) ? Integer.parseInt(param.get("page")) : 0;
+        int size = (param.get("size") != null) ? Integer.parseInt(param.get("size")) : 10;
+
+
+        QuerySearchKeys querySearchKeys = new QuerySearchKeys(categoryId, verticalId, new long[]{}, new long[]{}, minPrice, maxPrice);
+        QueryOrder queryOrder = new QueryOrder("price", "ASC");
+        QueryLimit queryLimit = new QueryLimit( size, page * size);
+
+        return this.productDetailsDao.getSearchResult(querySearchKeys, queryOrder, queryLimit);
     }
 }

@@ -56,109 +56,11 @@ public class ProductController {
         return this.bannerService.getBanners();
     }
 
-    /*@RequestMapping(value = "/searchTest", method = RequestMethod.GET)
-    public ResponseEntity<?> searchTest(@RequestParam Map<String,String> param){
-
-        //fetching all query param data
-        String categoryId = (param.get("categoryId") != "0") ? param.get("categoryId") : null;
-        int page = (param.get("page") != null) ? Integer.parseInt(param.get("page")) : 0;
-        int size = (param.get("size") != null) ? Integer.parseInt(param.get("size")) : 10;
-
-
-        Page<Product> productPage = this.productService.getProductsPage(categoryId, new PageRequest(page, size));
-
-        //int noOfPages = productPage.getTotalPages();
-        int startCount = page * size;
-        int endCount = startCount + productPage.getNumberOfElements();
-
-        SearchResult searchResult = new SearchResult();
-        searchResult.setNoOfPages(productPage.getTotalPages());
-        searchResult.setStartCount(startCount + 1);
-        searchResult.setEndCount(endCount);
-        searchResult.setTotalProductCount(productPage.getTotalElements());
-        //searchResult.setProducts(productPage.getContent());
-
-        return new ResponseEntity<>(searchResult, HttpStatus.OK);
-    }*/
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public ResponseEntity<?> search(@RequestParam Map<String,String> param,
-                           HttpServletRequest request,
-                           HttpServletResponse response){
-
-        String categoryId = param.get("categoryId") != null && param.get("categoryId").trim() != "" ? param.get("categoryId") : "0";
-        String verticalId = param.get("verticalId") != null && param.get("verticalId").trim() != "" ? param.get("verticalId") : "0" ;
-
-
-
-        int minPrice = param.get("minPrice") != null ? Integer.parseInt(param.get("minPrice")) : 0;
-        int maxPrice = param.get("maxPrice") != null ? Integer.parseInt(param.get("maxPrice")) : 100000000;
-
-        int page = (param.get("page") != null) ? Integer.parseInt(param.get("page")) : 0;
-        int size = (param.get("size") != null) ? Integer.parseInt(param.get("size")) : 10;
-
-
-        List<Long> productIds = new LinkedList<>();
-        if(categoryId != "0"){
-            this.productService.findByCategory_Id(Long.parseLong(categoryId)).
-                    forEach(product ->  productIds.add(product.getId()) );
-        }
-
-        if(verticalId != "0"){
-            this.productService.findByVerticalId(Long.parseLong(verticalId)).
-                    forEach(product -> productIds.add(product.getId()));
-        }
-
-        SearchResult searchResult = new SearchResult();
-        try{
-            //get product counts
-            long totalProductCount =
-                    this.productService.
-                            getProductsCount(productIds, minPrice, maxPrice);
-            /*PrintWriter printWriter = response.getWriter();*/
-            response.addHeader("Content-Type", "application/json");
-            //response.addHeader("Content-Disposition", "attachment; filename=todos.csv");
-            response.addHeader("counting", Long.toString(totalProductCount));
-
-            //get products
-            Stream<ProductDetails> productDetailsStream =
-                    this.productDetailsRepository.
-                        getProducts(productIds, minPrice, maxPrice, page * size, size);
-
-            //System.out.println(productDetailsStream);
-            List<ProductDetailsBean> productDetailsBeans = new ArrayList<>();
-            productDetailsStream.forEach(productDetails -> {
-                ObjectMapper om = new ObjectMapper();
-                try{
-                    //printWriter.print(om.writeValueAsString(ProductDetailsBeanFactory.convert(productDetails)));
-                    //printWriter.flush();
-                    //Thread.sleep(2000);
-                    productDetailsBeans.add(ProductDetailsBeanFactory.convert(productDetails));
-                    System.out.println(productDetails.getProductName());
-                }catch(Exception e){
-
-                }
-            });
-            /*os.flush();
-            os.close();*/
-            /*printWriter.close();*/
-            int startCount = page * size;
-            int endCount = startCount + productDetailsBeans.size();
-
-
-            searchResult.setStartCount(startCount + 1);
-            searchResult.setEndCount(endCount);
-            searchResult.setTotalProductCount(totalProductCount);
-            searchResult.setNoOfPages( (int)(searchResult.getTotalProductCount()/size) + 1);
-            searchResult.setProductDetailsBeans(productDetailsBeans);
-
-            return new ResponseEntity<>(searchResult, HttpStatus.OK);
-        }catch (Exception e){
-            searchResult.setProductDetailsBeans(new ArrayList<>());
-            return new ResponseEntity<>(searchResult, HttpStatus.OK);
-        }
-
+    public ResponseEntity<?> search(@RequestParam Map<String,String> param){
+            return new ResponseEntity<>(this.productService.getSearchResult(param), HttpStatus.OK);
     }
 
 
@@ -194,8 +96,6 @@ public class ProductController {
         }catch (Exception e){
             return new ResponseEntity<>(false, HttpStatus.OK);
         }
-
-
     }
 
     @RequestMapping(value = "product/updateState/{id}", method = RequestMethod.PUT)
@@ -209,6 +109,4 @@ public class ProductController {
         }
 
     }
-
-
 }
