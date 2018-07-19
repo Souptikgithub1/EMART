@@ -114,18 +114,19 @@ public class ProductServiceImpl implements ProductService{
 
 
     @Override
-    public SearchResult getSearchResult(Map<String, String> param) {
+    public SearchResult getSearchResult(Map<String, Object> param) {
 
-        long categoryId = param.get("categoryId") != null && param.get("categoryId").trim() != "" ? Long.parseLong(param.get("categoryId")) : 0;
-        long verticalId = param.get("verticalId") != null && param.get("verticalId").trim() != "" ? Long.parseLong(param.get("verticalId")) : 0 ;
+        long categoryId = param.get("categoryId") != null && ((String)param.get("categoryId")).trim() != "" ? Long.parseLong((String) param.get("categoryId")) : 0;
+        long verticalId = param.get("verticalId") != null && ((String)param.get("verticalId")).trim() != "" ? Long.parseLong((String) param.get("verticalId")) : 0 ;
 
 
 
-        int minPrice = param.get("minPrice") != null ? Integer.parseInt(param.get("minPrice")) : 0;
-        int maxPrice = param.get("maxPrice") != null ? Integer.parseInt(param.get("maxPrice")) : 100000000;
+        int minPrice = param.get("minPrice") != null ? Integer.parseInt((String) param.get("minPrice")) : 0;
+        int maxPrice = param.get("maxPrice") != null ? Integer.parseInt((String) param.get("maxPrice")) : 100000000;
 
-        int page = (param.get("page") != null) ? Integer.parseInt(param.get("page")) : 0;
-        int size = (param.get("size") != null) ? Integer.parseInt(param.get("size")) : 10;
+        int page = (param.get("page") != null) ? Integer.parseInt((String) param.get("page")) : 0;
+        int size = (param.get("size") != null) ? Integer.parseInt((String) param.get("size")) : 10;
+
 
 
         QuerySearchKeys querySearchKeys = new QuerySearchKeys(categoryId, verticalId, new long[]{}, new long[]{}, minPrice, maxPrice);

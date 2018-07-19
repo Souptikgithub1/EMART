@@ -26,5 +26,5 @@ public interface ProductService {
     /*Stream<ProductDetails> getProducts(Map<String, String> param);*/
     void delete(long id);
     void updateProductState(long productId);
-    SearchResult getSearchResult(Map<String, String> param);
+    SearchResult getSearchResult(Map<String, Object> param);
 }

@@ -59,7 +59,7 @@ public class ProductController {
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public ResponseEntity<?> search(@RequestParam Map<String,String> param){
+    public ResponseEntity<?> search(@RequestParam Map<String,Object> param){
             return new ResponseEntity<>(this.productService.getSearchResult(param), HttpStatus.OK);
     }
 

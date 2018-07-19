@@ -29,4 +29,9 @@ public class ProductFeatureNamesServiceImpl implements ProductFeatureNamesServic
     public List<ProductFeatureNames> getByVerticalId(long verticalId) {
         return this.productFeatureNamesRepository.findByProdVertId(verticalId);
     }
+
+    @Override
+    public List<ProductFeatureNames> findByVerticalIdAndIsFilterable(long verticalId, String isFilterable) {
+        return this.productFeatureNamesRepository.findByProdVertIdAndIsFilterable(verticalId, isFilterable);
+    }
 }
