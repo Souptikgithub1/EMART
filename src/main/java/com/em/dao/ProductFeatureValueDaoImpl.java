@@ -36,7 +36,7 @@ public class ProductFeatureValueDaoImpl implements ProductFeatureValueDao {
                     featureValues += "'" + featureValue + "',";
                 }
                 featureValues = featureValues.substring(0, featureValues.length()-1);
-                whereClause += " product_id IN (SELECT product_id from em_product_feature_values WHERE prod_feature_value IN (" + featureValues + ") AND prod_feature_id = " + featureId + ") AND ";
+                whereClause += " epfv.product_id IN (SELECT product_id from em_product_feature_values WHERE prod_feature_value IN (" + featureValues + ") AND prod_feature_id = " + featureId + ") AND ";
             }
 
             whereClause = whereClause.substring(0, whereClause.length()-4);
@@ -44,7 +44,7 @@ public class ProductFeatureValueDaoImpl implements ProductFeatureValueDao {
 
 
 
-        String query = " SELECT * FROM `em_product_feature_values` WHERE " + whereClause + " GROUP BY product_id";
+        String query = " SELECT *FROM em_product_feature_values AS epfv WHERE " + whereClause + " GROUP BY epfv.product_id";
         List<ProductFeatureValues> productFeatureValuesList = this.entityManager.createNativeQuery(query, ProductFeatureValues.class).getResultList();
         List<Long> productIds = new LinkedList<>();
         productFeatureValuesList.forEach(productFeatureValue -> productIds.add(productFeatureValue.getProductId()));
