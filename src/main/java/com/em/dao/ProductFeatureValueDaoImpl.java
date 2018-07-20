@@ -43,7 +43,7 @@ public class ProductFeatureValueDaoImpl implements ProductFeatureValueDao {
         }
 
 
-        this.entityManager.createNativeQuery("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY','')); ").executeUpdate();
+        /*this.entityManager.createNativeQuery("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY','')); ").executeUpdate();*/
 
         String query = " SELECT *FROM em_product_feature_values AS epfv WHERE " + whereClause + " GROUP BY epfv.product_id";
         List<ProductFeatureValues> productFeatureValuesList = this.entityManager.createNativeQuery(query, ProductFeatureValues.class).getResultList();
