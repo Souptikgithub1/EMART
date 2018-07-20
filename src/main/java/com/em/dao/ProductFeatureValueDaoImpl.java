@@ -44,7 +44,8 @@ public class ProductFeatureValueDaoImpl implements ProductFeatureValueDao {
 
 
 
-        String query = " SELECT *FROM em_product_feature_values AS epfv WHERE " + whereClause + " GROUP BY epfv.product_id";
+        String query = " SELECT *FROM em_product_feature_values AS epfv WHERE " + whereClause + " ";
+                        //+ " GROUP BY epfv.product_id";
         List<ProductFeatureValues> productFeatureValuesList = this.entityManager.createNativeQuery(query, ProductFeatureValues.class).getResultList();
         List<Long> productIds = new LinkedList<>();
         productFeatureValuesList.forEach(productFeatureValue -> productIds.add(productFeatureValue.getProductId()));
