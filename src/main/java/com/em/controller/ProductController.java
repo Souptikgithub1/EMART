@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +60,7 @@ public class ProductController {
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public ResponseEntity<?> search(@RequestParam Map<String,Object> param){
+    public ResponseEntity<?> search(@RequestParam MultiValueMap<String,Object> param){
             return new ResponseEntity<>(this.productService.getSearchResult(param), HttpStatus.OK);
     }
 

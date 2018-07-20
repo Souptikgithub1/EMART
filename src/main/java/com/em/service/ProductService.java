@@ -6,6 +6,7 @@ import com.em.entity.ProductDetails;
 import com.em.entity.SearchResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.MultiValueMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,5 +27,5 @@ public interface ProductService {
     /*Stream<ProductDetails> getProducts(Map<String, String> param);*/
     void delete(long id);
     void updateProductState(long productId);
-    SearchResult getSearchResult(Map<String, Object> param);
+    SearchResult getSearchResult(MultiValueMap<String, Object> param);
 }

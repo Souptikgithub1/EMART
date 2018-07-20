@@ -11,4 +11,6 @@ import java.util.List;
 public interface ProductFeatureValueRepository extends JpaRepository<ProductFeatureValues, Long> {
 
     void deleteByProductId(long productId);
+
+    List<ProductFeatureValues> findByProdFeatureIdAndProdFeatureValueIn(long featureId, List<String> featureValues);
 }

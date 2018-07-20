@@ -1,31 +1,23 @@
 package com.em.service;
 
-import com.em.bean.ProductDetailsBean;
-import com.em.bean.QueryLimit;
-import com.em.bean.QueryOrder;
-import com.em.bean.QuerySearchKeys;
+import com.em.bean.*;
 import com.em.beanFactory.ProductDetailsBeanFactory;
 import com.em.dao.ProductDetailsDao;
 import com.em.entity.Product;
 import com.em.entity.ProductDetails;
+import com.em.entity.ProductFeatureValues;
 import com.em.entity.SearchResult;
 import com.em.repository.ProductDetailsRepository;
-import com.em.repository.ProductFeatureValueRepository;
 import com.em.repository.ProductRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by ANIMUS on 24-08-2017.
@@ -42,6 +34,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Autowired
     private ProductDetailsDao productDetailsDao;
+
 
     @Override
     @Transactional
@@ -114,22 +107,45 @@ public class ProductServiceImpl implements ProductService{
 
 
     @Override
-    public SearchResult getSearchResult(Map<String, Object> param) {
-
-        long categoryId = param.get("categoryId") != null && ((String)param.get("categoryId")).trim() != "" ? Long.parseLong((String) param.get("categoryId")) : 0;
-        long verticalId = param.get("verticalId") != null && ((String)param.get("verticalId")).trim() != "" ? Long.parseLong((String) param.get("verticalId")) : 0 ;
+    public SearchResult getSearchResult(MultiValueMap<String, Object> param) {
 
 
-
-        int minPrice = param.get("minPrice") != null ? Integer.parseInt((String) param.get("minPrice")) : 0;
-        int maxPrice = param.get("maxPrice") != null ? Integer.parseInt((String) param.get("maxPrice")) : 100000000;
-
-        int page = (param.get("page") != null) ? Integer.parseInt((String) param.get("page")) : 0;
-        int size = (param.get("size") != null) ? Integer.parseInt((String) param.get("size")) : 10;
+        long categoryId = param.get("categoryId") != null && ((String)param.get("categoryId").get(0)).trim() != "" ? Long.parseLong((String) param.get("categoryId").get(0)) : 0;
+        long verticalId = param.get("verticalId") != null && ((String)param.get("verticalId").get(0)).trim() != "" ? Long.parseLong((String) param.get("verticalId").get(0)) : 0 ;
 
 
 
-        QuerySearchKeys querySearchKeys = new QuerySearchKeys(categoryId, verticalId, new long[]{}, new long[]{}, minPrice, maxPrice);
+        int minPrice = param.get("minPrice") != null ? Integer.parseInt((String) param.get("minPrice").get(0)) : 0;
+        int maxPrice = param.get("maxPrice") != null ? Integer.parseInt((String) param.get("maxPrice").get(0)) : 100000000;
+
+        int page = (param.get("page") != null) ? Integer.parseInt((String) param.get("page").get(0)) : 0;
+        int size = (param.get("size") != null) ? Integer.parseInt((String) param.get("size").get(0)) : 10;
+
+
+        //getting filter values and
+        List<Long> productIds = new LinkedList<>();
+        if(param.get("filters") != null){
+            List<String> filtersParam = (List<String>) (List<?>) param.get("filters");
+
+            Gson gson = new Gson();
+            List<Map<String, Object>> filters = new LinkedList<>() ;
+            filtersParam.forEach(filterParam -> {
+                filters.add(gson.fromJson(filterParam, Map.class));
+            });
+
+            productIds = this.productFeatureValueService.getProductIdsByFilteringFeatureValues(filters);
+            if(productIds.size() == 0){
+                SearchResult searchResult = new SearchResult();
+                searchResult.setTotalProductCount(0);
+                searchResult.setNoOfPages(1);
+                searchResult.setEndCount(0);
+                searchResult.setStartCount(0);
+                searchResult.setProductDetailsBeans(new ArrayList<>());
+            }
+            System.out.println(productIds);
+        }
+
+        QuerySearchKeys querySearchKeys = new QuerySearchKeys(categoryId, verticalId, new ArrayList<>(), productIds, minPrice, maxPrice);
         QueryOrder queryOrder = new QueryOrder("price", "ASC");
         QueryLimit queryLimit = new QueryLimit( size, page * size);
 

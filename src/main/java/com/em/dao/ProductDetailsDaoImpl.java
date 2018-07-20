@@ -26,29 +26,58 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
     @Override
     public SearchResult getSearchResult(QuerySearchKeys querySearchKeys, QueryOrder queryOrder, QueryLimit queryLimit) {
 
+        long categoryId = querySearchKeys.getCategoryId();
+        long verticalId = querySearchKeys.getVerticalId();
+
+        List<Long> brandIdList = querySearchKeys.getBrandIds();
+        String brandIds = "";
+        if(brandIdList.size() > 0){
+
+            for (Long brandId: brandIdList) {
+                brandIds += brandId + ",";
+            }
+            brandIds = brandIds.substring(0, brandIds.length()-1);
+        }
+
+
+        List<Long> productIdList = querySearchKeys.getProductIds();
+        String productIds = "";
+        if(productIdList.size() > 0){
+
+            for (Long productId: productIdList) {
+                productIds += productId + ",";
+            }
+            productIds = productIds.substring(0, productIds.length()-1);
+        }
+
         String whereClause = " 0 ";
 
         //search by categoryId
-        if(querySearchKeys.getCategoryId() != 0){
-            whereClause = " ep.category_id = " + querySearchKeys.getCategoryId() + " ";
+        if(categoryId != 0){
+            whereClause = " ep.category_id = " + categoryId + " ";
 
-            if(querySearchKeys.getBrandIds().length > 0){
-                whereClause += " AND ep.brand_id IN " + querySearchKeys.getBrandIds() + " ";
+            if(brandIdList.size() > 0){
+                whereClause += " AND ep.brand_id IN " + brandIds + " ";
             }
         }
 
         //search by verticalId
-        if(querySearchKeys.getVerticalId() != 0){
-            whereClause = " ep.vertical_id = " + querySearchKeys.getVerticalId();
+        if(verticalId != 0){
+            whereClause = " ep.vertical_id = " + verticalId;
 
-            if(querySearchKeys.getBrandIds().length > 0){
-                whereClause += " AND ep.brand_id IN " + querySearchKeys.getBrandIds() + " ";
+            if(brandIdList.size() > 0){
+                whereClause += " AND ep.brand_id IN " + brandIds + " ";
             }
         }
 
         //search by product Ids
-        if(querySearchKeys.getProductIds().length > 0){
-            whereClause = " ep.id IN " + querySearchKeys.getProductIds();
+        if(productIdList.size() > 0){
+            if(categoryId != 0 || verticalId != 0 || brandIdList.size() != 0){
+                whereClause += " AND ep.id IN (" + productIds + ") ";
+            }else{
+                whereClause = " ep.id IN (" + productIds + ") ";
+            }
+
         }
 
         int minPrice = querySearchKeys.getMinPrice();
