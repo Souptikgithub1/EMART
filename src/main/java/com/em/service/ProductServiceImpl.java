@@ -141,8 +141,8 @@ public class ProductServiceImpl implements ProductService{
                 searchResult.setEndCount(0);
                 searchResult.setStartCount(0);
                 searchResult.setProductDetailsBeans(new ArrayList<>());
+             return searchResult;
             }
-            System.out.println(productIds);
         }
 
         QuerySearchKeys querySearchKeys = new QuerySearchKeys(categoryId, verticalId, new ArrayList<>(), productIds, minPrice, maxPrice);
