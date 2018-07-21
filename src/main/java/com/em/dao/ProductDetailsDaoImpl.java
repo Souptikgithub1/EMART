@@ -13,8 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Transactional
 @Repository
@@ -40,7 +42,9 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
         }
 
 
-        List<Long> productIdList = querySearchKeys.getProductIds();
+        System.out.println(querySearchKeys.getProductIds());
+        Set<Long> productIdList = new HashSet<>(querySearchKeys.getProductIds());
+        System.out.println(productIdList);
         String productIds = "";
         if(productIdList.size() > 0){
 
@@ -57,6 +61,7 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
             whereClause = " ep.category_id = " + categoryId + " ";
 
             if(brandIdList.size() > 0){
+
                 whereClause += " AND ep.brand_id IN " + brandIds + " ";
             }
         }
