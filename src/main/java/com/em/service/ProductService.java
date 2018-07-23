@@ -23,6 +23,8 @@ public interface ProductService {
     ProductDetailsBean getSingleProduct(long productId);
     Product add(Product product);
     List<Product> getAll();
+    List<Product> getByVerticalIdAndBrandId(long verticalId, long brandId);
+    List<Product> getByVerticalId(long verticalId);
     Product update(Product product);
     /*Stream<ProductDetails> getProducts(Map<String, String> param);*/
     void delete(long id);

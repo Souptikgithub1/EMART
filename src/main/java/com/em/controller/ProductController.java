@@ -84,6 +84,23 @@ public class ProductController {
         return new ResponseEntity<>(this.productService.getAll(), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "product/{verticalId}/{brandId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getProductsByVerticalIdAndBrandId(@PathVariable("verticalId") String verticalId,
+                                         @PathVariable("brandId") String brandId){
+
+        List<Product> products = new ArrayList<>();
+        if(verticalId != "0" && brandId != "0"){
+            products = this.productService.getByVerticalIdAndBrandId(Long.parseLong(verticalId), Long.parseLong(brandId));
+        }
+        System.out.println(brandId);
+        if(verticalId != "0"){
+            System.out.println("vert exists and no brand");
+            products = this.productService.getByVerticalId(Long.parseLong(verticalId));
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/product/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updateProduct(@RequestBody Product product){
         return new ResponseEntity<>(this.productService.update(product), HttpStatus.OK);

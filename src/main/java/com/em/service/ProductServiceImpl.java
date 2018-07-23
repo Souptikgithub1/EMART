@@ -89,6 +89,16 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    public List<Product> getByVerticalIdAndBrandId(long verticalId, long brandId) {
+        return this.productRepository.findByVerticalIdAndBrand_Id(verticalId, brandId);
+    }
+
+    @Override
+    public List<Product> getByVerticalId(long verticalId) {
+        return this.productRepository.findByVerticalId(verticalId);
+    }
+
+    @Override
     public Product update(Product product) {
         return productRepository.save(product);
     }
