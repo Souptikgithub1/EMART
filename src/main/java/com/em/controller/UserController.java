@@ -1,5 +1,6 @@
 package com.em.controller;
 
+import com.em.Util.Response;
 import com.em.entity.User;
 import com.em.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,20 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ResponseEntity<?> login(@RequestParam Map<String, String> paramMap){
-        System.out.println(paramMap.get("email"));
-        System.out.println(paramMap.get("password"));
-        User user = this.userService.findByEmailAndPassword(paramMap.get("email"), paramMap.get("password"));
-        if (user != null){
-            user.setPassword("");
+        String email = paramMap.get("email");
+        String password = paramMap.get("password");
+        String authToken = paramMap.get("authToken");
+        String provider = paramMap.get("provider");
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setAuthToken(authToken);
+        user.setProvider(provider);
+        if(provider!="SELF"){
+            user.setId(Long.parseLong(paramMap.get("id")));
+            user.setName(paramMap.get("name"));
+            user.setPhone(paramMap.get("phone"));
         }
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(this.userService.login(user), HttpStatus.OK);
     }
 }

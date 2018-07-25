@@ -34,6 +34,15 @@ public class User {
         super();
     }
 
+    public User(String email, String name, String password, String phone, String authToken, String provider) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.phone = phone;
+        this.authToken = authToken;
+        this.provider = provider;
+    }
+
     public long getId() {
         return id;
     }
