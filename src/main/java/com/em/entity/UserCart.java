@@ -19,6 +19,9 @@ public class UserCart {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column(name = "timestamp")
+    private String timeStamp;
+
     public UserCart() {
         super();
     }
@@ -45,5 +48,13 @@ public class UserCart {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }
