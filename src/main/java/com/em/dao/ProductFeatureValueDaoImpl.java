@@ -1,6 +1,7 @@
 package com.em.dao;
 
 import com.em.entity.ProductFeatureValues;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ public class ProductFeatureValueDaoImpl implements ProductFeatureValueDao {
 
 
     @PersistenceContext
+    @Autowired
     private EntityManager entityManager;
 
     @Override

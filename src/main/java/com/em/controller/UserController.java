@@ -34,7 +34,7 @@ public class UserController {
         user.setPassword(password);
         user.setAuthToken(authToken);
         user.setProvider(provider);
-        if(provider!="SELF"){
+        if(!provider.equalsIgnoreCase("SELF")){
             user.setId(Long.parseLong(paramMap.get("id")));
             user.setName(paramMap.get("name"));
             user.setPhone(paramMap.get("phone"));

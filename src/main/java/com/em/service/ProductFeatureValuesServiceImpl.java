@@ -27,7 +27,7 @@ public class ProductFeatureValuesServiceImpl implements ProductFeatureValueServi
 
     @Override
     public List<ProductFeatureValues> addAll(List<ProductFeatureValues> productFeatureValuesList) {
-        return this.productFeatureValueRepository.save(productFeatureValuesList);
+        return this.productFeatureValueRepository.saveAll(productFeatureValuesList);
     }
 
     @Override

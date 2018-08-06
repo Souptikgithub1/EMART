@@ -105,7 +105,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public void delete(long id) {
-        this.productRepository.delete(id);
+        this.productRepository.deleteById(id);
         this.productFeatureValueService.deleteByProductId(id);
     }
 

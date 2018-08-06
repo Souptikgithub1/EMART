@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response login(User user) {
-            if(user.getProvider() == "SELF"){
+            if(user.getProvider().equalsIgnoreCase("SELF")){
                 if(!this.isUserExist(user)){
                     return new Response("FAILED", "this user doesn't exist", null);
                 }else{

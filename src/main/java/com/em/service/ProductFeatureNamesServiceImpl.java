@@ -22,7 +22,7 @@ public class ProductFeatureNamesServiceImpl implements ProductFeatureNamesServic
 
     @Override
     public List<ProductFeatureNames> addAll(List<ProductFeatureNames> productFeatureNamesList) {
-        return this.productFeatureNamesRepository.save(productFeatureNamesList);
+        return this.productFeatureNamesRepository.saveAll(productFeatureNamesList);
     }
 
     @Override
