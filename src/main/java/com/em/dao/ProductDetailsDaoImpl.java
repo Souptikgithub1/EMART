@@ -112,7 +112,7 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
                 " LEFT JOIN em_product_feature_values AS epfv ON epfv.prod_feature_id = epfn.id AND epfv.product_id = ep.id " +
 
                 " LEFT JOIN em_product_feature_category AS epfc ON epfn.feature_category_id = epfc.id " +
-                " WHERE " + whereClause +
+                " WHERE ep.state = '1' AND " + whereClause +
                 " GROUP BY ep.id ORDER BY " + orderBy + " " + queryOrder.getOrderDirection() +
                 " LIMIT " + queryLimit.getLimit() + " OFFSET " + queryLimit.getOffset() + " ";
 
@@ -120,7 +120,7 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
         List<ProductDetailsBean> productDetailsBeanList = new LinkedList<>();
         productDetailsList.forEach(productDetails -> productDetailsBeanList.add(ProductDetailsBeanFactory.convert(productDetails)));
 
-        List<BigInteger> totalCountList = this.entityManager.createNativeQuery(" SELECT count(*) FROM em_product AS ep WHERE " + whereClause + " " ).getResultList();
+        List<BigInteger> totalCountList = this.entityManager.createNativeQuery(" SELECT count(*) FROM em_product AS ep WHERE ep.state = '1' AND " + whereClause + " " ).getResultList();
         long totalCount = totalCountList.get(0).longValue();
 
         int startCount = queryLimit.getOffset();
