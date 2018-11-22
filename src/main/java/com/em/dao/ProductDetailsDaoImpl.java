@@ -131,7 +131,9 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
         searchResult.setStartCount(startCount + 1);
         searchResult.setEndCount(endCount);
         searchResult.setTotalProductCount(totalCount);
-        searchResult.setNoOfPages( (int)(totalCount/queryLimit.getLimit()) + 1);
+        int noOfPages = totalCount == 0 ? 1
+                : (int)(totalCount/queryLimit.getLimit()) + ( ((totalCount%queryLimit.getLimit()) == 0) ? 0 : 1);
+        searchResult.setNoOfPages(noOfPages);
 
         return searchResult;
     }
