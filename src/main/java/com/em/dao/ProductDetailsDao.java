@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface ProductDetailsDao {
     SearchResult getSearchResult(QuerySearchKeys querySearchKeys, QueryOrder queryOrder, QueryLimit queryLimit);
+    List<Long> getProductIdsByQueryString(List<String> queryStringArr);
 }

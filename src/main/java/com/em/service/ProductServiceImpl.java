@@ -132,8 +132,17 @@ public class ProductServiceImpl implements ProductService{
         int size = (param.get("size") != null) ? Integer.parseInt((String) param.get("size").get(0)) : 10;
 
 
-        //getting filter values and
         List<Long> productIds = new LinkedList<>();
+
+        //fetching productIds by query string
+        String[] queryStringArr = null;
+        if(param.get("q") != null){
+            queryStringArr = param.get("q").get(0).toString().split(" ");
+            System.out.println(queryStringArr[0]);
+            productIds.addAll(this.productDetailsDao.getProductIdsByQueryString(Arrays.asList(queryStringArr)));
+        }
+
+        //getting filter values and
         if(param.get("filters") != null){
             List<String> filtersParam = (List<String>) (List<?>) param.get("filters");
 
@@ -143,7 +152,7 @@ public class ProductServiceImpl implements ProductService{
                 filters.add(gson.fromJson(filterParam, Map.class));
             });
 
-            productIds = this.productFeatureValueService.getProductIdsByFilteringFeatureValues(filters);
+            productIds.addAll(this.productFeatureValueService.getProductIdsByFilteringFeatureValues(filters));
             if(productIds.size() == 0){
                 SearchResult searchResult = new SearchResult();
                 searchResult.setTotalProductCount(0);

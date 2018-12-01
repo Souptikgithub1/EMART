@@ -5,6 +5,7 @@ import com.em.bean.QueryLimit;
 import com.em.bean.QueryOrder;
 import com.em.bean.QuerySearchKeys;
 import com.em.beanFactory.ProductDetailsBeanFactory;
+import com.em.entity.Product;
 import com.em.entity.ProductDetails;
 import com.em.entity.SearchResult;
 import org.springframework.stereotype.Repository;
@@ -136,5 +137,36 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
         searchResult.setNoOfPages(noOfPages);
 
         return searchResult;
+    }
+
+    @Override
+    public List<Long> getProductIdsByQueryString(List<String> queryStringArr){
+
+        String whereClause = "";
+        if(queryStringArr.size() > 0){
+            for(String queryStr: queryStringArr){
+                whereClause +=  " ep.id IN ( SELECT ep.id " +
+                        " FROM em_product AS ep " +
+                        " LEFT JOIN em_category AS ec ON ep.category_id = ec.id " +
+                        " LEFT JOIN em_brand AS eb ON ep.brand_id = eb.id " +
+                        " WHERE  ep.product_name like '%" + queryStr + "%' " +
+                                " OR eb.brand_name like '%" + queryStr + "%' " +
+                                " OR ec.name like '%" + queryStr + "%' ) AND ";
+            }
+            whereClause = whereClause.substring(0, whereClause.length()-4);
+        }else{
+            whereClause = " 0 ";
+        }
+
+
+        String query = " SELECT ep.* " +
+                " FROM em_product AS ep " +
+                " LEFT JOIN em_category AS ec ON ep.category_id = ec.id " +
+                " LEFT JOIN em_brand AS eb ON ep.brand_id = eb.id " +
+                " WHERE ep.state = '1' AND " + whereClause;
+        List<Product> products = this.entityManager.createNativeQuery(query, Product.class).getResultList();
+        List<Long> productIds = new LinkedList<>();
+        products.forEach(product -> productIds.add(product.getId()));
+        return productIds;
     }
 }
