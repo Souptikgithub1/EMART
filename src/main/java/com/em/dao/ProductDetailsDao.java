@@ -7,8 +7,9 @@ import com.em.entity.ProductDetails;
 import com.em.entity.SearchResult;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProductDetailsDao {
     SearchResult getSearchResult(QuerySearchKeys querySearchKeys, QueryOrder queryOrder, QueryLimit queryLimit);
-    List<Long> getProductIdsByQueryString(List<String> queryStringArr);
+    Set<Long> getProductIdsByQueryString(List<String> queryStringArr);
 }

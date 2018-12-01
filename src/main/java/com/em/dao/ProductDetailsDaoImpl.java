@@ -14,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Transactional
 @Repository
@@ -140,7 +137,7 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
     }
 
     @Override
-    public List<Long> getProductIdsByQueryString(List<String> queryStringArr){
+    public Set<Long> getProductIdsByQueryString(List<String> queryStringArr){
 
         String whereClause = "";
         if(queryStringArr.size() > 0){
@@ -165,7 +162,7 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
                 " LEFT JOIN em_brand AS eb ON ep.brand_id = eb.id " +
                 " WHERE ep.state = '1' AND " + whereClause;
         List<Product> products = this.entityManager.createNativeQuery(query, Product.class).getResultList();
-        List<Long> productIds = new LinkedList<>();
+        Set<Long> productIds = new LinkedHashSet<>();
         products.forEach(product -> productIds.add(product.getId()));
         return productIds;
     }

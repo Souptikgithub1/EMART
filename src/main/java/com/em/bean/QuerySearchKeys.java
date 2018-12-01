@@ -1,13 +1,14 @@
 package com.em.bean;
 
 import java.util.List;
+import java.util.Set;
 
 public class QuerySearchKeys {
 
     private long categoryId;
     private long verticalId;
     private List<Long> brandIds;
-    private List<Long> productIds;
+    private Set<Long> productIds;
 
     private int minPrice;
     private int maxPrice;
@@ -16,7 +17,7 @@ public class QuerySearchKeys {
         super();
     }
 
-    public QuerySearchKeys(long categoryId, long verticalId, List<Long> brandIds, List<Long> productIds, int minPrice, int maxPrice) {
+    public QuerySearchKeys(long categoryId, long verticalId, List<Long> brandIds, Set<Long> productIds, int minPrice, int maxPrice) {
         this.categoryId = categoryId;
         this.verticalId = verticalId;
         this.brandIds = brandIds;
@@ -49,11 +50,11 @@ public class QuerySearchKeys {
         this.brandIds = brandIds;
     }
 
-    public List<Long> getProductIds() {
+    public Set<Long> getProductIds() {
         return productIds;
     }
 
-    public void setProductIds(List<Long> productIds) {
+    public void setProductIds(Set<Long> productIds) {
         this.productIds = productIds;
     }
 

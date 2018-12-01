@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service("productFeatureValueService")
 public class ProductFeatureValuesServiceImpl implements ProductFeatureValueService {
@@ -42,7 +43,7 @@ public class ProductFeatureValuesServiceImpl implements ProductFeatureValueServi
     }
 
     @Override
-    public List<Long> getProductIdsByFilteringFeatureValues(List<Map<String, Object>> filters) {
+    public Set<Long> getProductIdsByFilteringFeatureValues(List<Map<String, Object>> filters) {
         return this.productFeatureValueDao.getProductIdsByFilter(filters);
     }
 }

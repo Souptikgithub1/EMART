@@ -132,18 +132,20 @@ public class ProductServiceImpl implements ProductService{
         int size = (param.get("size") != null) ? Integer.parseInt((String) param.get("size").get(0)) : 10;
 
 
-        List<Long> productIds = new LinkedList<>();
+        Set<Long> productIds = new LinkedHashSet<>();
 
         //fetching productIds by query string
         String[] queryStringArr = null;
+        Set<Long> productIdsFromQueryString = new HashSet<>();
         if(param.get("q") != null){
             queryStringArr = param.get("q").get(0).toString().split(" ");
             System.out.println(queryStringArr[0]);
-            productIds.addAll(this.productDetailsDao.getProductIdsByQueryString(Arrays.asList(queryStringArr)));
+            productIdsFromQueryString.addAll(this.productDetailsDao.getProductIdsByQueryString(Arrays.asList(queryStringArr)));
         }
 
         //getting filter values and
         if(param.get("filters") != null){
+            Set<Long> productIdSet = new LinkedHashSet<>();
             List<String> filtersParam = (List<String>) (List<?>) param.get("filters");
 
             Gson gson = new Gson();
@@ -152,7 +154,18 @@ public class ProductServiceImpl implements ProductService{
                 filters.add(gson.fromJson(filterParam, Map.class));
             });
 
-            productIds.addAll(this.productFeatureValueService.getProductIdsByFilteringFeatureValues(filters));
+            productIdSet = this.productFeatureValueService.getProductIdsByFilteringFeatureValues(filters);
+
+            if(productIdsFromQueryString.size() > 0){
+                for(Long id: productIdsFromQueryString){
+                    if(productIdSet.contains(id)){
+                        productIds.add(id);
+                    }
+                }
+            }else{
+                productIds.addAll(productIdSet);
+            }
+
             if(productIds.size() == 0){
                 SearchResult searchResult = new SearchResult();
                 searchResult.setTotalProductCount(0);
@@ -162,6 +175,8 @@ public class ProductServiceImpl implements ProductService{
                 searchResult.setProductDetailsBeans(new ArrayList<>());
              return searchResult;
             }
+        }else{
+            productIds.addAll(productIdsFromQueryString);
         }
 
         QuerySearchKeys querySearchKeys = new QuerySearchKeys(categoryId, verticalId, new ArrayList<>(), productIds, minPrice, maxPrice);

@@ -7,9 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Transactional
 @Repository
@@ -24,7 +22,7 @@ public class ProductFeatureValueDaoImpl implements ProductFeatureValueDao {
     private EntityManager entityManager;
 
     @Override
-    public List<Long> getProductIdsByFilter(List<Map<String, Object>> filters) {
+    public Set<Long> getProductIdsByFilter(List<Map<String, Object>> filters) {
 
         String whereClause = " 0 ";
 
@@ -50,7 +48,7 @@ public class ProductFeatureValueDaoImpl implements ProductFeatureValueDao {
         String query = " SELECT *FROM em_product_feature_values AS epfv WHERE " + whereClause + " ";
         //+ " GROUP BY epfv.product_id";
         List<ProductFeatureValues> productFeatureValuesList = this.entityManager.createNativeQuery(query, ProductFeatureValues.class).getResultList();
-        List<Long> productIds = new LinkedList<>();
+        Set<Long> productIds = new LinkedHashSet<>();
         productFeatureValuesList.forEach(productFeatureValue -> productIds.add(productFeatureValue.getProductId()));
         return productIds;
     }
