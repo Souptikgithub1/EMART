@@ -144,7 +144,7 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
             for(String queryStr: queryStringArr){
                 whereClause +=  " ep.id IN ( SELECT ep.id " +
                         " FROM em_product AS ep " +
-                        " LEFT JOIN em_category AS ec ON ep.category_id = ec.id " +
+                        " LEFT JOIN em_category AS ec ON ep.category_id = ec.id OR ec.id = ep.vertical_id " +
                         " LEFT JOIN em_brand AS eb ON ep.brand_id = eb.id " +
                         " WHERE  ep.product_name like '%" + queryStr + "%' " +
                                 " OR eb.brand_name like '%" + queryStr + "%' " +
@@ -158,7 +158,7 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
 
         String query = " SELECT ep.* " +
                 " FROM em_product AS ep " +
-                " LEFT JOIN em_category AS ec ON ep.category_id = ec.id " +
+                " LEFT JOIN em_category AS ec ON ep.category_id = ec.id OR ep.vertical_id = ec.id " +
                 " LEFT JOIN em_brand AS eb ON ep.brand_id = eb.id " +
                 " WHERE ep.state = '1' AND " + whereClause;
         List<Product> products = this.entityManager.createNativeQuery(query, Product.class).getResultList();
