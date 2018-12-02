@@ -86,8 +86,8 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
         //get Price range according to the filters set before setting min and max price
         List<Object[]> aggrList = this.entityManager.createNativeQuery(" SELECT MIN(ep.selling_rate), MAX(ep.selling_rate) FROM em_product AS ep WHERE ep.state = '1' AND " + whereClause + " ").getResultList();
         Object[] aggr = aggrList.get(0);
-        int minAggrPrice = (Integer) aggr[0];
-        int maxAggrPrice = (Integer) aggr[1];
+        int minAggrPrice = aggr[0] != null ? (Integer) aggr[0] : 0 ;
+        int maxAggrPrice = aggr[1] != null ? (Integer) aggr[1] : 10000000;
 
 
         //now narrow search result by price
