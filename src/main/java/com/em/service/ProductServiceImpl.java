@@ -129,7 +129,7 @@ public class ProductServiceImpl implements ProductService{
         int maxPrice = param.get("maxPrice") != null ? Integer.parseInt((String) param.get("maxPrice").get(0)) : 100000000;
 
         int page = (param.get("page") != null) ? Integer.parseInt((String) param.get("page").get(0)) : 0;
-        int size = (param.get("size") != null) ? Integer.parseInt((String) param.get("size").get(0)) : 10;
+        int size = (param.get("size") != null) ? Integer.parseInt((String) param.get("size").get(0)) : 15;
 
 
         Set<Long> productIds = new LinkedHashSet<>();
