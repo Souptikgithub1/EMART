@@ -86,7 +86,7 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
         int minPrice = querySearchKeys.getMinPrice();
         int maxPrice = querySearchKeys.getMaxPrice();
         if(maxPrice > 0){
-            whereClause += " AND ep.selling_rate BETWEEN " + minPrice + " AND " + maxPrice + " ";
+            //whereClause += " AND ep.selling_rate BETWEEN " + minPrice + " AND " + maxPrice + " ";
         }
 
         String orderBy = " ";
@@ -110,7 +110,7 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
                 " LEFT JOIN em_product_feature_values AS epfv ON epfv.prod_feature_id = epfn.id AND epfv.product_id = ep.id " +
 
                 " LEFT JOIN em_product_feature_category AS epfc ON epfn.feature_category_id = epfc.id " +
-                " WHERE ep.state = '1' AND " + whereClause +
+                " WHERE ep.state = '1' AND ep.selling_rate BETWEEN " + minPrice + " AND " + maxPrice + " AND " + whereClause +
                 " GROUP BY ep.id ORDER BY " + orderBy + " " + queryOrder.getOrderDirection() +
                 " LIMIT " + queryLimit.getLimit() + " OFFSET " + queryLimit.getOffset() + " ";
 
@@ -118,8 +118,12 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
         List<ProductDetailsBean> productDetailsBeanList = new LinkedList<>();
         productDetailsList.forEach(productDetails -> productDetailsBeanList.add(ProductDetailsBeanFactory.convert(productDetails)));
 
-        List<BigInteger> totalCountList = this.entityManager.createNativeQuery(" SELECT count(*) FROM em_product AS ep WHERE ep.state = '1' AND " + whereClause + " " ).getResultList();
-        long totalCount = totalCountList.get(0).longValue();
+        List<Object[]> aggrList = this.entityManager.createNativeQuery(" SELECT count(*), MIN(ep.selling_rate), MAX(ep.selling_rate) FROM em_product AS ep WHERE ep.state = '1' AND " + whereClause + " " ).getResultList();
+        Object[] aggr = aggrList.get(0);
+
+        int totalCount = ((BigInteger) aggr[0]).intValue();
+        int minAggrPrice = (Integer) aggr[1];
+        int maxAggrPrice = (Integer) aggr[2];
 
         int startCount = queryLimit.getOffset();
         int endCount = startCount + productDetailsBeanList.size();
@@ -129,6 +133,9 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
         searchResult.setStartCount(startCount + 1);
         searchResult.setEndCount(endCount);
         searchResult.setTotalProductCount(totalCount);
+        searchResult.setMinPrice(minAggrPrice);
+        searchResult.setMaxPrice(maxAggrPrice);
+
         int noOfPages = totalCount == 0 ? 1
                 : (int)(totalCount/queryLimit.getLimit()) + ( ((totalCount%queryLimit.getLimit()) == 0) ? 0 : 1);
         searchResult.setNoOfPages(noOfPages);
