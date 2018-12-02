@@ -84,10 +84,7 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
         }
 
         //get Price range according to the filters set before setting min and max price
-        List<Object[]> aggrList = this.entityManager.createNativeQuery(" SELECT MIN(ep.selling_rate), MAX(ep.selling_rate) FROM em_product AS ep WHERE ep.state = '1' AND " + whereClause + " ").getResultList();
-        Object[] aggr = aggrList.get(0);
-        int minAggrPrice = aggr[0] != null ? (Integer) aggr[0] : 0 ;
-        int maxAggrPrice = aggr[1] != null ? (Integer) aggr[1] : 10000000;
+        String whereClauseForPriceRange = whereClause;
 
 
         //now narrow search result by price
@@ -128,6 +125,11 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
 
         List<BigInteger> totalCOuntList = this.entityManager.createNativeQuery(" SELECT count(*) FROM em_product AS ep WHERE ep.state = '1' AND " + whereClause + " " ).getResultList();
         int totalCount = totalCOuntList.get(0).intValue();
+
+        List<Object[]> aggrList = this.entityManager.createNativeQuery(" SELECT MIN(ep.selling_rate), MAX(ep.selling_rate) FROM em_product AS ep WHERE ep.state = '1' AND " + whereClauseForPriceRange + " ").getResultList();
+        Object[] aggr = aggrList.get(0);
+        int minAggrPrice = aggr[0] != null ? (Integer) aggr[0] : 0 ;
+        int maxAggrPrice = aggr[1] != null ? (Integer) aggr[1] : 10000000;
 
         int startCount = queryLimit.getOffset();
         int endCount = startCount + productDetailsBeanList.size();
