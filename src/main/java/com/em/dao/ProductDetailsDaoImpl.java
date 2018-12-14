@@ -95,8 +95,11 @@ public class ProductDetailsDaoImpl implements ProductDetailsDao {
         }
 
         String orderBy = " ";
-        if(queryOrder.getOrderBy() == "price"){
+        if(queryOrder.getOrderBy().equalsIgnoreCase("price") ){
             orderBy = " ep.selling_rate ";
+        }
+        if(queryOrder.getOrderBy().equalsIgnoreCase("latest")){
+            orderBy = " ep.id ";
         }
 
 

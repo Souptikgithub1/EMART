@@ -130,7 +130,10 @@ public class ProductServiceImpl implements ProductService{
 
         int page = (param.get("page") != null) ? Integer.parseInt((String) param.get("page").get(0)) : 0;
         int size = (param.get("size") != null) ? Integer.parseInt((String) param.get("size").get(0)) : 15;
-
+        String sort = (param.get("sort") != null) ? (String) param.get("sort").get(0) : "price_asc";
+        String[] sortArr = sort.split("_");
+        String orderBy = sortArr[0];
+        String orderDirection = sortArr[1];
 
         Set<Long> productIds = new LinkedHashSet<>();
 
@@ -180,7 +183,7 @@ public class ProductServiceImpl implements ProductService{
         }
 
         QuerySearchKeys querySearchKeys = new QuerySearchKeys(categoryId, verticalId, new ArrayList<>(), productIds, minPrice, maxPrice);
-        QueryOrder queryOrder = new QueryOrder("price", "ASC");
+        QueryOrder queryOrder = new QueryOrder(orderBy, orderDirection.toUpperCase());
         QueryLimit queryLimit = new QueryLimit( size, page * size);
 
         return this.productDetailsDao.getSearchResult(querySearchKeys, queryOrder, queryLimit);
