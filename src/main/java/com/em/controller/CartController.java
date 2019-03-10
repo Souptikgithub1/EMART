@@ -1,7 +1,6 @@
 package com.em.controller;
 
 import com.em.bean.UserCartBean;
-import com.em.entity.UserCart;
 import com.em.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
-@RequestMapping("/cart")
+@RequestMapping("/carts")
 @RestController
 public class CartController {
 

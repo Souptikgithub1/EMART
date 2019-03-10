@@ -1,24 +1,26 @@
 package com.em.bean;
 
 
+import java.util.Date;
+
 public class UserCartBean {
 
-    private long id;
+    private Long id;
 
     private UserBean user;
 
-    private ProductBean product;
+    private Long productId;
 
-    private String timeStamp;
+    private Date timeStamp;
 
     public UserCartBean() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -30,19 +32,19 @@ public class UserCartBean {
         this.user = user;
     }
 
-    public ProductBean getProduct() {
-        return product;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setProduct(ProductBean product) {
-        this.product = product;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
-    public String getTimeStamp() {
+    public Date getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
+    public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
     }
 }

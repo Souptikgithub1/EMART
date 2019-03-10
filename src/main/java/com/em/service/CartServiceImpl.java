@@ -4,7 +4,7 @@ import com.em.bean.UserBean;
 import com.em.bean.UserCartBean;
 import com.em.entity.Product;
 import com.em.entity.User;
-import com.em.entity.UserCart;
+import com.em.entity.Cart;
 import com.em.repository.CartRepository;
 import com.em.repository.ProductRepository;
 import com.em.repository.UserRepository;
@@ -27,17 +27,21 @@ public class CartServiceImpl implements CartService{
     @Override
     public UserCartBean add(UserCartBean userCartBean) {
         Long userId = userCartBean.getUser().getId();
-        Long productId = userCartBean.getProduct().getId();
+        Long productId = userCartBean.getProductId();
 
         User user = this.userRepository.findById(userId).get();
-        Product product = this.productRepository.findById(productId).get();
 
-        UserCart userCart = new UserCart();
-        userCart.setProduct(product);
-        userCart.setUser(user);
+        Cart cart = new Cart();
+        cart.setProductId(productId);
+        cart.setUser(user);
 
         UserCartBean userCartBeanResponse = new UserCartBean();
-        BeanUtils.copyProperties(this.cartRepository.save(userCart), userCartBeanResponse);
+        Cart cartSaved = this.cartRepository.save(cart);
+        BeanUtils.copyProperties(cartSaved, userCartBeanResponse);
+        UserBean userBean = new UserBean();
+        BeanUtils.copyProperties(user, userBean);
+        userCartBeanResponse.setUser(userBean);
+
         return userCartBeanResponse;
     }
 }
